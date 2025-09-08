@@ -1,5 +1,30 @@
 # CLAUDE.md
 
+On travaille dans ce sens.
+
+On lance toujours un test avant de coder quoique ce soit.
+
+On travaille avec une vue qui utilise un controller. Le controller permet de déclencher des actions (il appelle les uses cases).
+Le controller met à jour le state.
+Pour la vue des composants, on utilise le state via pinia. C'est le state qui met à disposition un view model. 
+
+On utilise massivement l'architecture hexagonale.
+
+Au niveau des tests, on se retrouve avec plusieurs couches : 
+On fait un test de composant qui va vérifier que l'on affiche le composant correctement en fonction du state seul.
+On fait un test de contrat qui vérifie avec un stub paramétré que le composant appelle le bon controller (le controller est stubbé).
+On fait un test de contrat qui vérifie que le controller appelle le bon use case (le use case est stubbé).
+On fait des tests unitaires pour les use cases.
+On fait des tests d'intégration pour les adapters.
+
+On fait une couche après l'autre.
+
+
+
+
+
+
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 Practice of TDD. Run test and only do what test results says
