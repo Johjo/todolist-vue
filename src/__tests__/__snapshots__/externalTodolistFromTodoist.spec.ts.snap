@@ -1,3 +1,42 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`externalTodolistFromTodoist > should return a todoist todolist 1`] = `[]`;
+exports[`externalTodolistFromTodoist > should return a todoist todolist 1`] = `
+[
+  {
+    "key": "6cVJF3pW8fXf25pr",
+    "title": "Téléchargez des [applications et plugins gratuits supplémentaires](https://todoist.com/fr/downloads?utm_source=todoist&utm_medium=in_app&utm_campaign=onboarding_project&utm_content=inbox) pour 💻,⌚️,🖥,📱 et 📧",
+  },
+  {
+    "key": "6cVJF3qFrhmcgVxr",
+    "title": "Répondez au [questionnaire sur votre méthode de productivité](https://todoist.com/productivity-methods?utm_source=todoist&utm_medium=in_app&utm_campaign=onboarding_project&utm_content=inbox)",
+  },
+  {
+    "key": "6cVJF4VW3jJ7X4rp",
+    "title": "Connecter mon calendrier professionnel à Todoist",
+  },
+  {
+    "key": "6cVJF4RGcwC7pxfG",
+    "title": "Passer en revue ma journée et planifier",
+  },
+  {
+    "key": "6cVJF4VVGmCvjwvp",
+    "title": "Ajouter mes routines _professionnelles_",
+  },
+  {
+    "key": "6cVJF4VGhHHMc9fG",
+    "title": "[Faire une pause régulière](https://blog.doist.com/end-work-day/?utm_source=todoist&utm_medium=in_app&utm_campaign=onboarding_project&utm_content=work) 🌖",
+  },
+  {
+    "key": "6cVJF4R8mC3f75fG",
+    "title": "[Les intégrations de Todoist qui boosteront votre productivité](https://blog.doist.com/todoist-integrations-productivity/?utm_source=todoist&utm_medium=in_app&utm_campaign=onboarding_project&utm_content=work)",
+  },
+  {
+    "key": "6cVJF4VpGjJR7FcG",
+    "title": "Explorer les [modèles professionnels de Todoist](https://todoist.com/fr/templates/category/work?utm_source=todoist&utm_medium=in_app&utm_campaign=onboarding_project&utm_content=work)",
+  },
+  {
+    "key": "6cmXCmFvfHfx4pjJ",
+    "title": "buy the milk",
+  },
+]
+`;

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run test:unit:*)",
-      "WebFetch(domain:developer.todoist.com)"
+      "WebFetch(domain:developer.todoist.com)",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []
