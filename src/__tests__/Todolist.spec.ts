@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/vue'
 import type { RenderOptions } from '@testing-library/vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { useTodolistStore } from '@/stores/todolist'
 import Todolist from '@/components/Todolist.vue'
 import type { ControllerPort } from '@/types/ControllerPort'
 
@@ -21,11 +23,14 @@ class ControllerForTest implements ControllerPort {
 
 describe('Todolist', () => {
   let controller: ControllerForTest
+  let store: ReturnType<typeof useTodolistStore>
   let options: RenderOptions<typeof Todolist>;
 
   beforeEach(() => {
     cleanup()
+    setActivePinia(createPinia())
     controller = new ControllerForTest()
+    store = useTodolistStore()
 
     options = {
       global: {
@@ -36,7 +41,7 @@ describe('Todolist', () => {
     }
   })
 
-  it('should display nothing to do message', () => {
+  it('should display nothing to do message when state is Nothing', () => {
     render(Todolist, options)
 
     expect(screen.getByText('Il n\'y a rien à faire')).toBeTruthy()
@@ -49,6 +54,13 @@ describe('Todolist', () => {
     refreshButton.click()
 
     expect(controller.history()).toEqual([{ name: 'refresh' }])
+  })
+
+  it('should display task when state is DoTask', () => {
+    store.setState({ type: 'DoTask', task: 'Faire quelque chose' })
+    render(Todolist, options)
+
+    expect(screen.getByText('Faire quelque chose')).toBeTruthy()
   })
 
 
