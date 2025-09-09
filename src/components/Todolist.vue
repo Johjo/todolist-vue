@@ -19,6 +19,10 @@ import { inject } from 'vue'
 import { useTodolistStore } from '@/stores/todolist'
 import type { ControllerPort } from '@/types/ControllerPort'
 
+defineOptions({
+  name: 'TodoList'
+})
+
 const controller = inject('controller') as ControllerPort
 const store = useTodolistStore()
 

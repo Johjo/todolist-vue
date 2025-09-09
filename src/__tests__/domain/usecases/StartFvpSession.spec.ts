@@ -1,13 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { StartFvpSession } from '../../../domain/usecases/StartFvpSession'
 import type { TaskRepositoryPort } from '../../../domain/ports/TaskRepositoryPort'
 import type { ExternalTodolistPort } from '../../../domain/ports/ExternalTodolistPort'
 import type { FvpRepositoryPort } from '../../../domain/ports/FvpRepositoryPort'
+import type { TaskInformation } from '../../../domain/entities/TaskInformation'
+import type { TaskFvp } from '../../../domain/entities/TaskFvp'
+import type { ExternalTask } from '../../../domain/entities/ExternalTask'
 
 class FakeTaskRepository implements TaskRepositoryPort {
-  private _saved: any[] = []
+  private _saved: TaskInformation[] = []
 
-  async save(task: any): Promise<void> {
+  async save(task: TaskInformation): Promise<void> {
     this._saved.push(task)
   }
 
@@ -17,9 +20,9 @@ class FakeTaskRepository implements TaskRepositoryPort {
 }
 
 class FakeFvpRepository implements FvpRepositoryPort {
-  private _saved: any[] = []
+  private _saved: TaskFvp[] = []
 
-  async save(taskFvp: any): Promise<void> {
+  async save(taskFvp: TaskFvp): Promise<void> {
     this._saved.push(taskFvp)
   }
 
@@ -29,9 +32,9 @@ class FakeFvpRepository implements FvpRepositoryPort {
 }
 
 class FakeExternalTodolist implements ExternalTodolistPort {
-  private _tasks: any[] = []
+  private _tasks: ExternalTask[] = []
 
-  setTasks(tasks: any[]) {
+  setTasks(tasks: ExternalTask[]) {
     this._tasks = tasks
   }
 
