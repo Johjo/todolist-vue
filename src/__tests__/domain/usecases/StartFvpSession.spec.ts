@@ -7,31 +7,31 @@ import type { TaskInformation } from '../../../domain/entities/TaskInformation'
 import type { TaskFvp } from '../../../domain/entities/TaskFvp'
 import type { ExternalTask } from '../../../domain/entities/ExternalTask'
 
-class FakeTaskRepository implements TaskRepositoryPort {
-  private _saved: TaskInformation[] = []
+class TaskRepositoryForTest implements TaskRepositoryPort {
+  private _tasks: TaskInformation[] = []
 
   async save(task: TaskInformation): Promise<void> {
-    this._saved.push(task)
+    this._tasks.push(task)
   }
 
   saved() {
-    return this._saved
+    return this._tasks
   }
 }
 
-class FakeFvpRepository implements FvpRepositoryPort {
-  private _saved: TaskFvp[] = []
+class FvpRepositoryForTest implements FvpRepositoryPort {
+  private _tasks: TaskFvp[] = []
 
   async save(taskFvp: TaskFvp): Promise<void> {
-    this._saved.push(taskFvp)
+    this._tasks.push(taskFvp)
   }
 
   saved() {
-    return this._saved
+    return this._tasks
   }
 }
 
-class FakeExternalTodolist implements ExternalTodolistPort {
+class ExternalTodolistForTest implements ExternalTodolistPort {
   private _tasks: ExternalTask[] = []
 
   setTasks(tasks: ExternalTask[]) {
@@ -44,52 +44,52 @@ class FakeExternalTodolist implements ExternalTodolistPort {
 }
 
 describe('StartFvpSession', () => {
-  let fakeTaskRepository: FakeTaskRepository
-  let fakeFvpRepository: FakeFvpRepository
-  let fakeExternalTodolist: FakeExternalTodolist
+  let taskRepository: TaskRepositoryForTest
+  let fvpRepository: FvpRepositoryForTest
+  let externalTodolist: ExternalTodolistForTest
 
   beforeEach(() => {
-    fakeTaskRepository = new FakeTaskRepository()
-    fakeFvpRepository = new FakeFvpRepository()
-    fakeExternalTodolist = new FakeExternalTodolist()
+    taskRepository = new TaskRepositoryForTest()
+    fvpRepository = new FvpRepositoryForTest()
+    externalTodolist = new ExternalTodolistForTest()
   })
 
   it('should save external tasks', async () => {
-    const sut = new StartFvpSession(fakeTaskRepository, fakeExternalTodolist, fakeFvpRepository)
-    fakeExternalTodolist.setTasks([{ key: 'key1', title: 'title1' }])
+    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
+    externalTodolist.setTasks([{ key: 'key1', title: 'title1' }])
 
     await sut.execute()
 
-    expect(fakeTaskRepository.saved()).toEqual([{ key: 'key1', title: 'title1' }])
+    expect(taskRepository.saved()).toEqual([{ key: 'key1', title: 'title1' }])
   })
 
   it('should save fvp task', async () => {
-    const sut = new StartFvpSession(fakeTaskRepository, fakeExternalTodolist, fakeFvpRepository)
-    fakeExternalTodolist.setTasks([{ key: 'key1', title: 'title1' }])
+    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
+    externalTodolist.setTasks([{ key: 'key1', title: 'title1' }])
 
     await sut.execute()
 
-    expect(fakeFvpRepository.saved()).toEqual([{ key: 'key1', status: 'new' }])
+    expect(fvpRepository.saved()).toEqual([{ key: 'key1', status: 'new' }])
   })
 
   it('should not save external task when no tasks', async () => {
-    const sut = new StartFvpSession(fakeTaskRepository, fakeExternalTodolist, fakeFvpRepository)
+    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
 
     await sut.execute()
 
-    expect(fakeTaskRepository.saved()).toEqual([])
+    expect(taskRepository.saved()).toEqual([])
   })
 
   it('should save external tasks when multiple tasks', async () => {
-    const sut = new StartFvpSession(fakeTaskRepository, fakeExternalTodolist, fakeFvpRepository)
-    fakeExternalTodolist.setTasks([
+    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
+    externalTodolist.setTasks([
       { key: 'key1', title: 'title1' },
       { key: 'key2', title: 'title2' }
     ])
 
     await sut.execute()
 
-    expect(fakeTaskRepository.saved()).toEqual([
+    expect(taskRepository.saved()).toEqual([
       { key: 'key1', title: 'title1' },
       { key: 'key2', title: 'title2' }
     ])
