@@ -4,8 +4,10 @@ import type { TaskRepositoryPort } from '../../../domain/ports/TaskRepositoryPor
 import type { ExternalTodolistPort } from '../../../domain/ports/ExternalTodolistPort'
 import type { FvpRepositoryPort } from '../../../domain/ports/FvpRepositoryPort'
 import type { TaskInformation } from '../../../domain/entities/TaskInformation'
-import type { NewTask, TaskFvp } from '../../../domain/entities/TaskFvp'
+import type { TaskFvp } from '../../../domain/entities/TaskFvp'
 import type { ExternalTask } from '../../../domain/entities/ExternalTask'
+import type { TaskBuilder } from '../../fixtures.ts'
+import { aTask } from '../../fixtures'
 
 class TaskRepositoryForTest implements TaskRepositoryPort {
   private _tasks: TaskInformation[] = []
@@ -43,32 +45,6 @@ class ExternalTodolistForTest implements ExternalTodolistPort {
   }
 }
 
-
-type taskDetail = { key: string, title: string }
-
-class TaskBuilder {
-  private detail: taskDetail = { key: 'key1', title: 'title1' }
-
-  constructor({ key }: { key: string }) {
-    this.detail = { key: key, title: `title ${key}` }
-  }
-
-  toExternal(): ExternalTask {
-    return { key: this.detail.key, title: this.detail.title }
-  }
-
-  toTaskInformation(): TaskInformation {
-    return { key: this.detail.key, title: this.detail.title }
-  }
-
-  toNewTask(): NewTask {
-    return { key: this.detail.key, status: 'new' }
-  }
-}
-
-function aTask({ key }: { key: string }) {
-  return new TaskBuilder({ key })
-}
 
 describe('StartFvpSession', () => {
   let taskRepository: TaskRepositoryForTest
