@@ -6,6 +6,10 @@
     <div v-else-if="store.state.type === 'DoTask'">
       {{ store.state.task }}
     </div>
+    <div v-else-if="store.state.type === 'ChooseTaskBetween'">
+      <div>{{ store.state.task1 }}</div>
+      <div>{{ store.state.task2 }}</div>
+    </div>
     <button @click="handleRefresh">Refresh</button>
   </div>
 </template>

@@ -8,7 +8,13 @@ type DoTask = {
   task: string
 }
 
-type State = NothingToDo | DoTask
+type ChooseTaskBetween = {
+  type: 'ChooseTaskBetween'
+  task1: string
+  task2: string
+}
+
+type State = NothingToDo | DoTask | ChooseTaskBetween
 
 export const useTodolistStore = defineStore('todolist', () => {
   const state = ref<State>({type: 'NothingToDo'})

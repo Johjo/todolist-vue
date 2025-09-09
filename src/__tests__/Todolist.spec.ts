@@ -63,5 +63,17 @@ describe('Todolist', () => {
     expect(screen.getByText('Faire quelque chose')).toBeTruthy()
   })
 
+  it('should display choice between two tasks when state is ChooseTaskBetween', () => {
+    store.setState({ 
+      type: 'ChooseTaskBetween', 
+      task1: 'Tâche A', 
+      task2: 'Tâche B' 
+    })
+    render(Todolist, options)
+
+    expect(screen.getByText('Tâche A')).toBeTruthy()
+    expect(screen.getByText('Tâche B')).toBeTruthy()
+  })
+
 
 })
