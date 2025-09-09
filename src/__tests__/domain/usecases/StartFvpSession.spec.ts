@@ -4,7 +4,7 @@ import type { TaskRepositoryPort } from '../../../domain/ports/TaskRepositoryPor
 import type { ExternalTodolistPort } from '../../../domain/ports/ExternalTodolistPort'
 import type { FvpRepositoryPort } from '../../../domain/ports/FvpRepositoryPort'
 import type { TaskInformation } from '../../../domain/entities/TaskInformation'
-import type { TaskFvp } from '../../../domain/entities/TaskFvp'
+import type { NewTask, TaskFvp } from '../../../domain/entities/TaskFvp'
 import type { ExternalTask } from '../../../domain/entities/ExternalTask'
 
 class TaskRepositoryForTest implements TaskRepositoryPort {
@@ -14,7 +14,7 @@ class TaskRepositoryForTest implements TaskRepositoryPort {
     this._tasks.push(task)
   }
 
-  saved() {
+  allTasks() {
     return this._tasks
   }
 }
@@ -26,7 +26,7 @@ class FvpRepositoryForTest implements FvpRepositoryPort {
     this._tasks.push(taskFvp)
   }
 
-  saved() {
+  allTasks(): TaskFvp[] {
     return this._tasks
   }
 }
@@ -34,7 +34,7 @@ class FvpRepositoryForTest implements FvpRepositoryPort {
 class ExternalTodolistForTest implements ExternalTodolistPort {
   private _tasks: ExternalTask[] = []
 
-  setTasks(tasks: ExternalTask[]) {
+  feed(tasks: ExternalTask[]) {
     this._tasks = tasks
   }
 
@@ -43,55 +43,84 @@ class ExternalTodolistForTest implements ExternalTodolistPort {
   }
 }
 
+
+type taskDetail = { key: string, title: string }
+
+class TaskBuilder {
+  private detail: taskDetail = { key: 'key1', title: 'title1' }
+
+  constructor({ key }: { key: string }) {
+    this.detail = { key: key, title: `title ${key}` }
+  }
+
+  toExternal(): ExternalTask {
+    return { key: this.detail.key, title: this.detail.title }
+  }
+
+  toTaskInformation(): TaskInformation {
+    return { key: this.detail.key, title: this.detail.title }
+  }
+
+  toNewTask(): NewTask {
+    return { key: this.detail.key, status: 'new' }
+  }
+}
+
+function aTask({ key }: { key: string }) {
+  return new TaskBuilder({ key })
+}
+
 describe('StartFvpSession', () => {
   let taskRepository: TaskRepositoryForTest
   let fvpRepository: FvpRepositoryForTest
   let externalTodolist: ExternalTodolistForTest
+  let sut: StartFvpSession
+  let taskOne: TaskBuilder
+  let taskTwo: TaskBuilder
 
   beforeEach(() => {
     taskRepository = new TaskRepositoryForTest()
     fvpRepository = new FvpRepositoryForTest()
     externalTodolist = new ExternalTodolistForTest()
+    sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
+    taskOne = aTask({ key: '1' })
+    taskTwo = aTask({ key: '2' })
   })
 
   it('should save external tasks', async () => {
-    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
-    externalTodolist.setTasks([{ key: 'key1', title: 'title1' }])
+    externalTodolist.feed([taskOne.toExternal()])
 
     await sut.execute()
 
-    expect(taskRepository.saved()).toEqual([{ key: 'key1', title: 'title1' }])
+    expect(taskRepository.allTasks()).toEqual([taskOne.toTaskInformation()])
   })
 
   it('should save fvp task', async () => {
-    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
-    externalTodolist.setTasks([{ key: 'key1', title: 'title1' }])
+    externalTodolist.feed([taskOne.toExternal()])
 
     await sut.execute()
 
-    expect(fvpRepository.saved()).toEqual([{ key: 'key1', status: 'new' }])
+    expect(fvpRepository.allTasks()).toEqual([taskOne.toNewTask()])
   })
 
   it('should not save external task when no tasks', async () => {
-    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
-
     await sut.execute()
 
-    expect(taskRepository.saved()).toEqual([])
+    expect(taskRepository.allTasks()).toEqual([])
   })
 
   it('should save external tasks when multiple tasks', async () => {
-    const sut = new StartFvpSession(taskRepository, externalTodolist, fvpRepository)
-    externalTodolist.setTasks([
-      { key: 'key1', title: 'title1' },
-      { key: 'key2', title: 'title2' }
+    externalTodolist.feed([
+      taskOne.toExternal(),
+      taskTwo.toExternal()
     ])
 
     await sut.execute()
 
-    expect(taskRepository.saved()).toEqual([
-      { key: 'key1', title: 'title1' },
-      { key: 'key2', title: 'title2' }
+    expect(taskRepository.allTasks()).toEqual([
+      taskOne.toTaskInformation(),
+      taskTwo.toTaskInformation()
     ])
+
   })
 })
