@@ -1,4 +1,5 @@
-import type { ExternalTask, ExternalTodolistPort } from './startFvpSession'
+import type { ExternalTask } from '../domain/entities/ExternalTask'
+import type { ExternalTodolistPort } from '../domain/ports/ExternalTodolistPort'
 import axios from 'axios'
 
 export class ExternalTodolistFromTodoist implements ExternalTodolistPort {

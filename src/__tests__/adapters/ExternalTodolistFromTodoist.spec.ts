@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import dotenv from 'dotenv'
-import { ExternalTodolistFromTodoist } from './externalTodolistFromTodoist'
+import { ExternalTodolistFromTodoist } from '../../adapters/ExternalTodolistFromTodoist'
 
 dotenv.config()
 

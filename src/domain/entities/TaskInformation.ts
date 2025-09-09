@@ -1,0 +1,1 @@
+export type TaskInformation = { key: string, title: string }

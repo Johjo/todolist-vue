@@ -1,6 +1,9 @@
-export interface TaskRepositoryPort {
-  save(task: TaskInformation): Promise<void>;
-}
+import type { TaskRepositoryPort } from '../ports/TaskRepositoryPort'
+import type { ExternalTodolistPort } from '../ports/ExternalTodolistPort'
+import type { FvpRepositoryPort } from '../ports/FvpRepositoryPort'
+import type { TaskInformation } from '../entities/TaskInformation'
+import type { ExternalTask } from '../entities/ExternalTask'
+import type { NewTask } from '../entities/TaskFvp'
 
 export class StartFvpSession {
   private _taskRepository: TaskRepositoryPort
@@ -23,7 +26,7 @@ export class StartFvpSession {
 
   }
 
-  private _toTaskInformation(externalTask: ExternalTask) {
+  private _toTaskInformation(externalTask: ExternalTask): TaskInformation {
     return {
       key: externalTask.key,
       title: externalTask.title
@@ -36,18 +39,4 @@ export class StartFvpSession {
       status: 'new'
     }
   }
-}
-
-export type TaskInformation = { key: string, title: string }
-export type ExternalTask = { key: string, title: string }
-
-export interface ExternalTodolistPort {
-  allActiveTasks(): Promise<ExternalTask[]>
-}
-
-export type NewTask = { key: string, status: 'new' }
-export type TaskFvp = NewTask
-
-export interface FvpRepositoryPort {
-  save(taskFvp: TaskFvp): Promise<void>
 }
